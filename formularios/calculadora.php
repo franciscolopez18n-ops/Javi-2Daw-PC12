@@ -20,8 +20,6 @@
             if (!empty($_POST['operacion'])) $operacion = test_input($_POST["operacion"]);
             else echo "Falta seleccionar la operacion"; 
         }
-
-        
         
         if (((isset($_POST['operando1']) and $operando1!="") and (isset($_POST['operando2']) and $operando2!="")) and isset($_POST['operacion'])) {
             switch ($operacion) {
@@ -61,7 +59,7 @@
             }
             return $operando1 / $operando2;
         }
-        
+
         // LIMPIAR
         function test_input($data) {
             $data = trim($data);

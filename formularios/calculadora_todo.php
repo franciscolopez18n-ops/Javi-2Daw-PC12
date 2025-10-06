@@ -10,9 +10,9 @@
 
     <form action="" method="post">
         <label for="operando1">Operando1:</label>
-        <input type="text" name='operando1' id="operando1"><br><br>
+        <input type="number" name='operando1' id="operando1"><br><br>
         <label for="operando2">Operando2:</label>
-        <input type="text" name='operando2'><br><br><br>
+        <input type="number" name='operando2'><br><br><br>
 
         Selecciona operación: <br>
         <input type="radio" name='operacion' id="suma" value="suma">
@@ -49,6 +49,7 @@
         }
         
         if (((isset($_POST['operando1']) and $operando1!="") and (isset($_POST['operando2']) and $operando2!="")) and isset($_POST['operacion'])) {
+            echo "<h1>Resultado</h1>";
             switch ($operacion) {
                 case "suma":
                     $resultado = sumar($operando1, $operando2);
