@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fichero 1 - Guardar alumnos</title>
 </head>
 <!--Programa fichero1.php: formulario que recoja los datos de alumnos y los almacene un fichero con
@@ -46,7 +47,7 @@ Las posiciones no ocupadas se completarán con espacios. -->
         $fecha = $_POST['fecha'];
         $localidad = $_POST['localidad'];
 
-        // Completamos con espacios
+        // Completamos con espacios hasta la longitud indicada
         $nombre = str_pad($nombre, 40);
         $apellido1 = str_pad($apellido1, 41);
         $apellido2 = str_pad($apellido2, 42);
