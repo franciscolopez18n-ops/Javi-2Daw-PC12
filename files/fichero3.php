@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fichero 3 - Mostrar alumnos</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 80%;
-            margin: 20px auto;
-        }
-    </style>
-</head>
-<body>
-    <h2 style="text-align:center;">Listado de Alumnos</h2>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fichero 3 - Mostrar alumnos</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 80%;
+            }
+            th, td {
+                border: 1px solid #333;
+       
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Listado de Alumnos</h2>
 
-    <?php
-        $ruta = "alumnos1.txt";
+        <?php
+            $ruta = "alumnos1.txt";
 
-        if (!file_exists($ruta)) {
-            echo "<p style='text-align:center; color:red;'>El fichero <b>$ruta</b> no existe.</p>";
-            exit;
-        }
+            // Abrimos el fichero o mostramos error
+            $file = fopen($ruta, "r") or die("<p>No se pudo abrir el fichero <b>$ruta</b></p>");
 
-        // Abrimos el fichero en modo lectura
-        $contenido = file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            // Leemos todo el contenido del fichero
+            $contenido = fread($file, filesize($ruta));
+            fclose($file);
 
-        $numFilas = count($contenido);
+            // Dividimos la cadena en partes y la guardamos en un array
+            $lineas = explode("\n", $contenido);
 
-        if ($numFilas > 0) {
+            $numFilas = 0;
+
             echo "<table>";
             echo "<tr>
                     <th>Nombre</th>
@@ -38,12 +42,16 @@
                     <th>Localidad</th>
                 </tr>";
 
-            foreach ($contenido as $linea) {
-                // Extraemos cada campo según posiciones fijas
-                $nombre = trim(substr($linea, 0, 40));
+            foreach ($lineas as $linea) {
+                if (trim($linea) === "") continue; // Si la linea esta vacia no hay alumno y pasa a la siguiente iteracion
+
+                $numFilas++;
+            
+                // Sacamos las partes de las cadenas y las guardamos en las variables
+                $nombre    = trim(substr($linea, 0, 40));
                 $apellido1 = trim(substr($linea, 40, 41));
                 $apellido2 = trim(substr($linea, 81, 42));
-                $fecha = trim(substr($linea, 123, 10));
+                $fecha     = trim(substr($linea, 123, 10));
                 $localidad = trim(substr($linea, 133, 27));
 
                 echo "<tr>
@@ -56,10 +64,7 @@
             }
 
             echo "</table>";
-            echo "<p style='text-align:center;'>Número de alumnos leídos: <b>$numFilas</b></p>";
-        } else {
-            echo "<p style='text-align:center;'>No hay alumnos en el fichero.</p>";
-        }
-    ?>
-</body>
+            echo "<p>Número de alumnos leídos: <b>$numFilas</b></p>";
+        ?>
+    </body>
 </html>
