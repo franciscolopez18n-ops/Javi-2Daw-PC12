@@ -37,28 +37,22 @@ Las posiciones no ocupadas se completarán con espacios. -->
 
     <?php
     if (isset($_POST['enviar'])) {
-        // Ruta del fichero
         $ruta = "alumnos1.txt";
 
-        // Recoger los datos del formulario
-        $nombre = $_POST['nombre'];
-        $apellido1 = $_POST['apellido1'];
-        $apellido2 = $_POST['apellido2'];
-        $fecha = $_POST['fecha'];
-        $localidad = $_POST['localidad'];
+        // Completamos con espacios
+        $nombre    = str_pad($_POST['nombre'], 40);
+        $apellido1 = str_pad($_POST['apellido1'], 41);
+        $apellido2 = str_pad($_POST['apellido2'], 42);
+        $fecha     = str_pad($_POST['fecha'], 10);
+        $localidad = str_pad($_POST['localidad'], 27);
 
-        // Completamos con espacios hasta la longitud indicada
-        $nombre = str_pad($nombre, 40);
-        $apellido1 = str_pad($apellido1, 41);
-        $apellido2 = str_pad($apellido2, 42);
-        $fecha = str_pad($fecha, 10);
-        $localidad = str_pad($localidad, 27);
-
-        // Concatenar los campos
+        // Concatenamos la línea
         $linea = $nombre . $apellido1 . $apellido2 . $fecha . $localidad . "\n";
 
-        // Guardardamos en el fichero
-        file_put_contents($ruta, $linea, FILE_APPEND);
+        // Abrimos el fichero y escribimos la linea
+        $file = fopen($ruta, "a");
+        fwrite($file, $linea);
+        fclose($file);
 
         echo "<p>Alumno guardado correctamente en <b>$ruta</b></p>";
     }

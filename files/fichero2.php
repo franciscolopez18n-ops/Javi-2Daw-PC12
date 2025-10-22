@@ -34,24 +34,26 @@ No se completarán con espacios los campos puesto que se separan por caracteres 
 
     <?php
         if (isset($_POST['enviar'])) {
-            // Ruta del fichero
             $ruta = "alumnos2.txt";
 
-            // Recoger los datos del formulario
-            $nombre = $_POST['nombre'];
+            $nombre    = $_POST['nombre'];
             $apellido1 = $_POST['apellido1'];
             $apellido2 = $_POST['apellido2'];
-            $fecha = $_POST['fecha'];
+            $fecha     = $_POST['fecha'];
             $localidad = $_POST['localidad'];
 
-            // Unimos con ##
+            // Concatenamos con ##
             $linea = $nombre . "##" . $apellido1 . "##" . $apellido2 . "##" . $fecha . "##" . $localidad . "\n";
 
-            // Guardar la línea en el fichero
-            file_put_contents($ruta, $linea, FILE_APPEND);
+            // Abrimos el fichero y escribimos
+            $file = fopen($ruta, "a");
+            fwrite($file, $linea);
+            fclose($file);
 
             echo "<p>Alumno guardado correctamente en <b>$ruta</b></p>";
         }
     ?>
+</body>
+</html>
 </body>
 </html>
