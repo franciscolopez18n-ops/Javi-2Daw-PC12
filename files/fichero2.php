@@ -13,7 +13,7 @@ No se completarán con espacios los campos puesto que se separan por caracteres 
 <body>
     <h2>Registro de alumnos (delimitador ##)</h2>
 
-    <form method="post" action="">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <label>Nombre:</label><br>
         <input type="text" name="nombre" required><br><br>
 
@@ -33,15 +33,27 @@ No se completarán con espacios los campos puesto que se separan por caracteres 
     </form>
 
     <?php
-        if (isset($_POST['enviar'])) {
+        // -----------------------------------------------------------------
+        // -----------------------------------------------------------------
+        // LIMPIAR DATOS
+        function test_input($data) {
+            $data = trim($data); // Quita espacios al inicio y final
+            $data = stripslashes($data); // Quita barras invertidas
+            $data = htmlspecialchars($data); // Convierte caracteres especiales en HTML
+            return $data;
+        }
+        // -----------------------------------------------------------------
+        // -----------------------------------------------------------------
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Recoge los datos           
+            $nombre = test_input($_POST['nombre']);
+            $apellido1 = test_input($_POST['apellido1']);
+            $apellido2 = test_input($_POST['apellido2']);
+            $fecha = test_input($_POST['fecha']);
+            $localidad = test_input($_POST['localidad']);
+        // -----------------------------------------------------------------
+        // -----------------------------------------------------------------
             $ruta = "alumnos2.txt";
-
-            $nombre    = $_POST['nombre'];
-            $apellido1 = $_POST['apellido1'];
-            $apellido2 = $_POST['apellido2'];
-            $fecha     = $_POST['fecha'];
-            $localidad = $_POST['localidad'];
-
             // Concatenamos con ##
             $linea = $nombre . "##" . $apellido1 . "##" . $apellido2 . "##" . $fecha . "##" . $localidad . "\n";
 

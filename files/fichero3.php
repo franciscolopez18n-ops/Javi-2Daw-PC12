@@ -19,6 +19,8 @@
         <h2>Listado de Alumnos</h2>
 
         <?php
+        
+            
             $ruta = "alumnos1.txt";
 
             // Abrimos el fichero o mostramos error
@@ -29,7 +31,7 @@
             fclose($file);
 
             // Dividimos la cadena en partes y la guardamos en un array
-            $lineas = explode("\n", $contenido);
+            $array_lineas = explode("\n", $contenido);
 
             $numFilas = 0;
 
@@ -42,18 +44,30 @@
                     <th>Localidad</th>
                 </tr>";
 
-            foreach ($lineas as $linea) {
-                if (trim($linea) === "") continue; // Si la linea esta vacia no hay alumno y pasa a la siguiente iteracion
+            foreach ($array_lineas as $linea) {
+                // Cuando concatenabamos en el 1 teniamos ""
+                if (trim($linea) !== ""){
 
-                $numFilas++;
+                    $numFilas++;
             
-                // Sacamos las partes de las cadenas y las guardamos en las variables
-                $nombre    = trim(substr($linea, 0, 40));
-                $apellido1 = trim(substr($linea, 40, 41));
-                $apellido2 = trim(substr($linea, 81, 42));
-                $fecha     = trim(substr($linea, 123, 10));
-                $localidad = trim(substr($linea, 133, 27));
+                    // Sacamos las partes de las cadenas y las guardamos en las variables
+                    $nombre    = trim(substr($linea, 0, 40));
+                    $apellido1 = trim(substr($linea, 40, 41));
+                    $apellido2 = trim(substr($linea, 81, 42));
+                    $fecha     = trim(substr($linea, 123, 10));
+                    $localidad = trim(substr($linea, 133, 27));
 
+                    pinta_tabla($nombre, $apellido1, $apellido2, $fecha, $localidad);
+
+                }
+
+                
+            }
+
+            echo "</table>";
+            echo "<p>Número de alumnos leídos: <b>$numFilas</b></p>";
+
+            function pinta_tabla($nombre, $apellido1, $apellido2, $fecha, $localidad){
                 echo "<tr>
                         <td>$nombre</td>
                         <td>$apellido1</td>
@@ -62,9 +76,6 @@
                         <td>$localidad</td>
                     </tr>";
             }
-
-            echo "</table>";
-            echo "<p>Número de alumnos leídos: <b>$numFilas</b></p>";
         ?>
     </body>
 </html>

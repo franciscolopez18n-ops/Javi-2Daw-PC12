@@ -16,7 +16,7 @@ Las posiciones no ocupadas se completarán con espacios. -->
 <body>
     <h2>Registro de alumnos</h2>
 
-    <form method="post" action="">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <label>Nombre:</label><br>
         <input type="text" name="nombre" required><br><br>
 
@@ -36,26 +36,46 @@ Las posiciones no ocupadas se completarán con espacios. -->
     </form>
 
     <?php
-    if (isset($_POST['enviar'])) {
-        $ruta = "alumnos1.txt";
+        // -----------------------------------------------------------------
+        // -----------------------------------------------------------------
+        // LIMPIAR DATOS
+        function test_input($data) {
+            $data = trim($data); // Quita espacios al inicio y final
+            $data = stripslashes($data); // Quita barras invertidas
+            $data = htmlspecialchars($data); // Convierte caracteres especiales en HTML
+            return $data;
+        }
+        // -----------------------------------------------------------------
+        // -----------------------------------------------------------------
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // -------------------------------------------------------------
+            // LIMPIA
+            $nombre = test_input($_POST['nombre']);
+            $apellido1 = test_input($_POST['apellido1']);
+            $apellido2 = test_input($_POST['apellido2']);
+            $fecha = test_input($_POST['fecha']);
+            $localidad = test_input($_POST['localidad']);
+            // -------------------------------------------------------------
+            // Indica la ruta
+            $ruta = "alumnos1.txt";   
 
-        // Completamos con espacios
-        $nombre    = str_pad($_POST['nombre'], 40);
-        $apellido1 = str_pad($_POST['apellido1'], 41);
-        $apellido2 = str_pad($_POST['apellido2'], 42);
-        $fecha     = str_pad($_POST['fecha'], 10);
-        $localidad = str_pad($_POST['localidad'], 27);
+            // Completamos con espacios hasta la longitud indicada
+            $nombre = str_pad($nombre, 40);
+            $apellido1 = str_pad($apellido1, 41);
+            $apellido2 = str_pad($apellido2, 42);
+            $fecha = str_pad($fecha, 10);
+            $localidad = str_pad($localidad, 27);
 
-        // Concatenamos la línea
-        $linea = $nombre . $apellido1 . $apellido2 . $fecha . $localidad . "\n";
+            // Concatenar los campos
+            $linea = $nombre . $apellido1 . $apellido2 . $fecha . $localidad . "\n";
 
-        // Abrimos el fichero y escribimos la linea
-        $file = fopen($ruta, "a");
-        fwrite($file, $linea);
-        fclose($file);
+            // Abrimos el fichero y escribimos la línea
+            $file = fopen($ruta, "a");
+            fwrite($file, $linea);
+            fclose($file);
 
-        echo "<p>Alumno guardado correctamente en <b>$ruta</b></p>";
-    }
+            echo "<p>Alumno guardado correctamente en <b>$ruta</b></p>";
+        }
     ?>
 </body>
 </html>
