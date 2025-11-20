@@ -24,7 +24,7 @@ completándose con 0 hasta completar el formato (este campo será calculado desd
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // LIMPIA Y PASA A MAYUSCULAS
-        $nombre = ucwords(test_input($_POST['nombre_categoria']));
+        $nombre = strtoupper(test_input($_POST['nombre_categoria']));
         $id_nuevo = generar_id($con);
 
         // INTENTAMOS INSERTAR LOS VALORES
@@ -35,6 +35,8 @@ completándose con 0 hasta completar el formato (este campo será calculado desd
             // INDICAMOS LOS VALORES
             $stmt->bindParam(':ID_CATEGORIA', $id_nuevo); // LLAMA A LA FUNCION
             $stmt->bindParam(':NOMBRE', $nombre); // RECIBE EL NOMBRE
+            
+            // COMPROBAMOS SI YA EXISTE UNA CATEGRIA CON ESE NOMBRE, SI NO EXISTE LA CREA
             if ( !comprueba_existe($con, $nombre)) {
                 $stmt->execute();
                 echo "<br>Categoría <b>$nombre</b> insertada con ID <b>$id_nuevo</b>";
@@ -60,7 +62,7 @@ completándose con 0 hasta completar el formato (este campo será calculado desd
         // SI EXISTE LA INCREMENTA 
         if($result){
             $ultimo_id =$result['ultimo_id']; // Guardamos el valor de la ultima fila que cargo el FETCH (C-00X)
-            $numero = intval(substr($ultimo_id,2)); // Guardamos la parte numerica
+            $numero = intval(substr($ultimo_id,2)); // Guardamos la parte numerica y la convertimos a entero
             // substr (cadena, inicio) sacamos la parte numerica; intval-convierte a entero (012 --> 12)
             $id_nuevo = $numero + 1;
         } 
@@ -77,7 +79,7 @@ completándose con 0 hasta completar el formato (este campo será calculado desd
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); // Guardamos lo que devuelve
 
         // Si es mayor a 0 entonces ya existe
         if($result['total'] > 0){
@@ -86,7 +88,7 @@ completándose con 0 hasta completar el formato (este campo será calculado desd
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->execute();
-            $id = $stmt->fetch(PDO::FETCH_ASSOC);
+            $id = $stmt->fetch(PDO::FETCH_ASSOC); 
             echo "<br>La categoría <b>$nombre</b> ya existe con ID <b>$id[id_repetido]</b>";
             return true; // Existe
         } else {
@@ -103,7 +105,7 @@ completándose con 0 hasta completar el formato (este campo será calculado desd
 
             // Devuelve el numero de filas que devuelve la sentencia
             if ($stmt->rowCount() == 0) {
-                echo "<p>No hay categorías registradas.</p>";
+                echo "<h2>No hay categorías registradas.</h2>";
             }
             // Si devuelve mas de una la imprime
             else{
